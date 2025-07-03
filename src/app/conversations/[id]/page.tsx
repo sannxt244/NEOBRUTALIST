@@ -1,3 +1,5 @@
+import Messsages from "./messages";
+
 interface PageParams {
   id: string;
 }
@@ -10,14 +12,14 @@ interface IMessage {
   CreatedDate: string;
 }
 
-export default async function Conversation({
+export default async function ConversationPage({
   params,
 }: {
   params: Promise<PageParams>;
 }) {
-  const unwrappedParams = await params;
+  const { id } = await params;
   const data = await fetch(
-    `https://misajsc.amis.vn/chat/api/business/v1/messages/conversation/${unwrappedParams.id}?Limit=16&Until=2025-07-02T17:48:08.617%2B07:00`,
+    `https://misajsc.amis.vn/chat/api/business/v1/messages/conversation/${id}?Limit=16&Until=2025-07-02T17:48:08.617%2B07:00`,
     {
       headers: {
         accept: "application/json, text/plain, */*",
@@ -38,26 +40,18 @@ export default async function Conversation({
       referrerPolicy: "strict-origin-when-cross-origin",
       mode: "cors",
       credentials: "include",
-    }
+    },
   );
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 1000);
+  });
   const messages = await data.json();
 
   return (
-    <div className="overflow-y-auto hidden md:block border-r-4 border-black bg-white/40">
-      {messages.map((message: IMessage) => (
-        <div key={message.Id} className="flex flex-col">
-          <div className="font-semibold">{message.SenderName}</div>
-          {message.Content && (
-            <div
-              className="mt-1 text-gray-700"
-              dangerouslySetInnerHTML={{ __html: message.Content }}
-            />
-          )}
-          <div className="text-xs text-gray-500">
-            {new Date(message.CreatedDate).toLocaleString()}
-          </div>
-        </div>
-      ))}
+    <div className="hidden overflow-y-auto border-r-4 border-black bg-white/40 md:block">
+      <Messsages messages={messages}></Messsages>
     </div>
   );
 }
