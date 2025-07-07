@@ -19,6 +19,10 @@ const items = [
     url: "/blogs",
   },
   {
+    title: "Tools",
+    url: "/tools",
+  },
+  {
     title: "Settings",
     url: "/settings",
   },
